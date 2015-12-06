@@ -5,12 +5,12 @@
 function solve(variables, clauses, assignment) {
 	assignment = assignment || {}
 
-	// if every clause is satisfied, then return this assignment
+	// if every clause is satisfied, found good assignment
 	if (clauses.every(clause => satisfied(clause, assignment) === true)) {
 		return assignment
 	}
 
-	// if any clause is false, then return false because it won't work
+	// if any clause is false, then this assignment won't work
 	if (clauses.some(clause => satisfied(clause, assignment) === false)) {
 		return false
 	}
@@ -36,14 +36,14 @@ function copy(assignment, literal, value) {
 	return Object.assign({}, assignment, o)
 }
 
-// function to check if a clause is satisfied
+// check if a clause is satisfied
 function satisfied(clause, assignment) {
-	// every literal false wrt to the assignment, then return false
+	// every literal not happy, not satisfied
 	if (clause.every(literal => happy(literal, assignment) === false)) {
 		return false
 	}
 
-	// some variable true, then true
+	// some literal happy, satisfied
 	if (clause.some(literal => happy(literal, assignment) === true)) {
 		return true
 	}
@@ -52,8 +52,8 @@ function satisfied(clause, assignment) {
 	return undefined
 }
 
+// check if a literal matches its assignment
 function happy(literal, assignment) {
-	// if literal unnegated, return value of assignment
 	if (literal[0] === '-') {
 		var val = assignment[literal.slice(1)]
 		return val === undefined ? undefined : !val
@@ -62,13 +62,5 @@ function happy(literal, assignment) {
 	}
 }
 
-let clauses = [
-  ['blue', 'green', '-yellow'],
-  ['-blue', '-green', 'yellow'],
-  ['pink', 'purple', 'green', 'blue', '-yellow']
-];
-
-let variables = ['blue', 'green', 'yellow', 'pink', 'purple'];
-
-let model = solve(variables, clauses);
-console.dir(model)
+// expose solve function
+module.exports = solve
